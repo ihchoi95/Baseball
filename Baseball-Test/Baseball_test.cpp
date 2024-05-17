@@ -1,5 +1,30 @@
-#include "pch.h"
+﻿#include "pch.h"
+#include "../Baseball/Baseball.cpp"
 
-TEST(BaseballGame, TryGameTest) {
-	EXPECT_EQ(1, 1);
+class BaseballFixture : public testing::Test {
+public:
+	Baseball game{ "123" };
+	void assertIllegalArgument(string guessNumber) {
+		try {
+			game.guess(string(guessNumber));
+			FAIL();
+		}
+		catch (exception e) {
+			// PASS
+		}
+	}
+};
+
+TEST_F(BaseballFixture, ThrowExceptionWhenIvalidCase) {
+	assertIllegalArgument("12");
+	assertIllegalArgument("12s");
+	assertIllegalArgument("121");
+}
+
+TEST_F(BaseballFixture, ReturnSolvedResultIfMatchedNumber) {
+	GeussResult result = game.guess("123");
+
+	EXPECT_TRUE(result.solved);
+	EXPECT_EQ(3, result.strikes);
+	EXPECT_EQ(0, result.balls);
 }
